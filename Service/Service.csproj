@@ -49,6 +49,10 @@
       <Project>{4ad0753c-0977-42fa-9a59-244b51be4f0e}</Project>
       <Name>DAO</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{c7273114-56c4-4fdd-aa3b-e2167c56673f}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="User\" />

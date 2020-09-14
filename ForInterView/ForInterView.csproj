@@ -181,6 +181,10 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{c7273114-56c4-4fdd-aa3b-e2167c56673f}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Service\Service.csproj">
       <Project>{668b041d-1326-42f6-a978-79183bfaec10}</Project>
       <Name>Service</Name>
