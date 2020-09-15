@@ -2,36 +2,57 @@
 @{
     ViewBag.Title = "Login";
 }
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
 @Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
 @Scripts.Render("~/bundles/bootstrap")
-<h2>
-    @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { id = "frmLogin" }))
-    {
-        <table>
-            <tr>
-                <th>
-                    帳號
-                </th>
-                <td>
-                    @Html.TextBoxFor(x => x.Account)
-                    @Html.ValidationMessageFor(x => x.Account)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    密碼
-                </th>
-                <td>
-                    @Html.PasswordFor(x => x.Password)
-                    @Html.ValidationMessageFor(x => x.Password)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="button"  onclick="$('#frmLogin').submit();"  value="登入" >
-                </td>
-            </tr>
-        </table>
+
+
+
+@using (Ajax.BeginForm("Login", "Home", new AjaxOptions
+{
+    OnSuccess = "LoginSuccess",
+    OnFailure = "Fail",
+}, new { id = "frmLogin" }))
+{
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <th>
+                帳號
+            </th>
+            <td>
+                @Html.TextBoxFor(x => x.Account)
+                @Html.ValidationMessageFor(x => x.Account)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                密碼
+            </th>
+            <td>
+                @Html.PasswordFor(x => x.Password)
+                @Html.ValidationMessageFor(x => x.Password)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" onclick="$('#frmLogin').submit();" value="登入">
+            </td>
+        </tr>
+    </table>
+}
+<script>
+    function LoginSuccess(result) {
+        if (!result.success)
+            alert('帳號或密碼有誤');
+        else {
+            location.href='@Url.Action("Index", "Home")';
+        }
     }
-</h2>
+    function Fail() {
+        alert('fail');
+    }
+</script>
 

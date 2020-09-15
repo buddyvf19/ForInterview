@@ -20,8 +20,7 @@ namespace DAO
         /// <returns></returns>
         public List<Catagories> GetCatagoryList()
         {
-            sql = @"select CompanyName,ContactName,ContactTitle,Address,City,Region
-                    from Catagories";
+            sql = @"select   CategoryID,CategoryName,Description from Categories ";
             return QueryLists<Catagories>(sql);
         }
     }

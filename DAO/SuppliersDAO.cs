@@ -21,7 +21,7 @@ namespace DAO
         public List<Suppliers> GetSuppliers()
         {
             sql = @"select SupplierID,CompanyName,ContactName,ContactTitle,Address,City,Region from Suppliers
-                    where Account=@Account ";
+                     ";
            return QueryLists<Suppliers>(sql);
         }
     }

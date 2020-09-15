@@ -18,6 +18,10 @@ namespace Service
         /// suppliers選單
         /// </summary>
         public List<Suppliers> Sup { get; set; }
+        public ProductService() : base()
+        {
+
+        }
         public ProductService(Employees User) : base(User)
         { 
         
@@ -48,11 +52,10 @@ namespace Service
         /// 讀取查詢畫面資料
         /// </summary>
         /// <returns></returns>
-        public List<Products> LoadQueryData()
+        public void LoadQueryData()
         {
             Cat = GetCatagories();
             Sup = GetSupplierList();
-           return Query();
         }
         /// <summary>
         /// 查詢
@@ -63,6 +66,17 @@ namespace Service
             using (var dao = new ProductsDAO())
             {
                 return dao.GetProductList(Product);
+            }
+        }
+        /// <summary>
+        /// 刪除
+        /// </summary>
+        /// <param name="ProductId"></param>
+        public void Delete(int[] ProductId)
+        {
+            using (var dao = new ProductsDAO())
+            {
+                dao.Delete(ProductId);
             }
         }
    }

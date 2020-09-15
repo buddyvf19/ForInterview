@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels;
+using System.Transactions;
 namespace DAO
 {
     public class ProductsDAO : _DAO
@@ -20,7 +21,9 @@ namespace DAO
         public List<Products> GetProductList(Products Products)
         {
             sql = @"select 
-                    ProductID,ProductName,a.SupplierID,a.CategoryID,QuantityPerUnit,UnitPrice
+                    ProductID,ProductName,a.SupplierID,CompanyName SupplierName
+                    ,a.CategoryID,CategoryName
+                    ,QuantityPerUnit,UnitPrice
                     ,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued
                     from Products a left join Categories b on a.CategoryID=b.CategoryID
                     left join  Suppliers c on a.SupplierID=c.SupplierID
@@ -30,13 +33,13 @@ namespace DAO
             {
                 sql += " and ProductName like '%'+@ProductName+'%' ";
             }
-            if (Products.CategoryID.HasValue)
+            if (Products.CategoryID>0)
             {
-                sql += " and CategoryID =@CategoryID ";
+                sql += " and a.CategoryID =@CategoryID ";
             }
-            if (Products.SupplierID.HasValue)
+            if (Products.SupplierID>0)
             {
-                sql += " and SupplierID =@SupplierID ";
+                sql += " and a.SupplierID =@SupplierID ";
             }
             return QueryLists<Products>(sql, Products);
         }
@@ -88,6 +91,19 @@ namespace DAO
                    where ProductID=@ProductID
             ";
             ExcuteNoQuery(sql, P);
+        }
+        /// <summary>
+        /// 刪除
+        /// </summary>
+        /// <param name="Product"></param>
+        public void Delete(int[] Product)
+        {
+            using (TransactionScope scpoe = new TransactionScope())
+            {
+                sql = "delete Products where ProductId in @Product ";
+                ExcuteNoQuery(sql, new { Product });
+                scpoe.Complete();
+            }
         }
     }
 }

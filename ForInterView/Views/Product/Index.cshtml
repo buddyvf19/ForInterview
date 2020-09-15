@@ -1,0 +1,100 @@
+﻿@model ForInterView.Models.ProductModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br>
+<form id="form">
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <td>
+                productName
+            </td>
+            <td colspan="3">
+                @Html.TextBoxFor(x => x.ProductName)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                supplier
+            </td>
+            <td>
+                @Html.DropDownListFor(x => x.SupplierID, Model.Sup)
+            </td>
+            <td>
+                catagory
+            </td>
+            <td>
+                @Html.DropDownListFor(x => x.CategoryID, Model.Cat)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="query" onclick="Query();">
+            </td>
+            <td>
+                <input type="button" value="delete" onclick="Delete();">
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+<div id="Grid">
+</div>
+@section scripts{
+    <script>
+        function Query() {
+            $.ajax({
+                method: 'POST',
+                url: '@Url.Action("QueryGrid", "Product")',
+                dataType: 'html',
+                data: {
+                    __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
+                    ProductName: $('#ProductName').val(),
+                    SupplierID: $('#SupplierID').val(),
+                    CategoryID: $('#CategoryID').val()
+                }
+            }).done(function (result) {
+                $('#Grid').html(result);
+            });
+        }
+        ///刪除勾選資料
+        function Delete() {
+            var ProductId = [];
+            //找是否勾選
+            $('#Grid').find('input[type=checkbox]').each(function (e) {
+                if (this.checked) {
+                    ProductId.push(this.value);
+                }
+            });
+            //沒勾報錯
+            if (ProductId.length == 0) {
+                alert('at lease 1 item must be checked');
+            }
+            else {
+                if (confirm('conform delete?')) {
+                    $.ajax({
+                        method: 'POST',
+                        url: '@Url.Action("Delete", "Product")',
+                        dataType: 'html',
+                        data: {
+                            __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
+                            Products: ProductId
+                        }
+                    }).done(function (result) {
+                        if (result.success) {
+                            alert('success');
+                            Query();
+                        }
+                        else {
+                            alert('error');
+                        }
+                    });
+                }
+            }
+        }
+        function OpenModify(ProdtId) {
+
+        }
+    </script>
+}

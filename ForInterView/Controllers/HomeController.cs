@@ -34,8 +34,10 @@ namespace ForInterView.Controllers
             if (s.Login())
             {
                 Session["User"] = s.EmpData;
+                return Json(new { success = true });
             }
-            return RedirectToAction("Index");
+            else
+                return Json(new {success=false });
         }
         /// <summary>
         /// Logout system
@@ -50,18 +52,6 @@ namespace ForInterView.Controllers
             FormsAuthentication.SignOut();
             return Redirect(FormsAuthentication.LoginUrl);
         }
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+   
     }
 }
