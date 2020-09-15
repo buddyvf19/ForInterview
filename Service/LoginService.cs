@@ -14,6 +14,7 @@ namespace Service
         }
         public LoginService(Employees User) : base(User)
         {
+            EmpData = loginUser;
         }
         public Employees EmpData { get; set; }
         /// <summary>
@@ -26,8 +27,8 @@ namespace Service
         {
             using (EmployeesDAO Dao = new EmployeesDAO())
             {
-                EmpData= Dao.GetLoginEmp(EmpData);
-                if (EmpData != null)
+                loginUser = Dao.GetLoginEmp(loginUser);
+                if (loginUser != null)
                     return true;
                 else
                     return false;

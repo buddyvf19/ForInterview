@@ -5,8 +5,8 @@ namespace DataModels
     public class Employees
     {
         public int EmployeeID { get; set; }
-        public string Account { get; set; }
-        public string Password { get; set; }
+        public virtual string Account { get; set; }
+        public virtual string Password { get; set; }
         public string  LastName { get; set; }
         public string FirstName { get; set; }
         public string Title { get; set; }

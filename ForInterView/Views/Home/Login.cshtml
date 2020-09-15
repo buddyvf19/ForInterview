@@ -1,0 +1,37 @@
+﻿@model ForInterView.Models.LoginModel
+@{
+    ViewBag.Title = "Login";
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<h2>
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { id = "frmLogin" }))
+    {
+        <table>
+            <tr>
+                <th>
+                    帳號
+                </th>
+                <td>
+                    @Html.TextBoxFor(x => x.Account)
+                    @Html.ValidationMessageFor(x => x.Account)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    密碼
+                </th>
+                <td>
+                    @Html.PasswordFor(x => x.Password)
+                    @Html.ValidationMessageFor(x => x.Password)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button"  onclick="$('#frmLogin').submit();"  value="登入" >
+                </td>
+            </tr>
+        </table>
+    }
+</h2>
+
