@@ -13,6 +13,7 @@ namespace DAO
     public class _DAO : IDisposable
     {
         string cnStr = ConfigurationManager.ConnectionStrings["MyDB"].ToString();
+        public string sql;
         private bool disposed = false;
         int _CommandTimeout = 30;
         public _DAO(int CommandTimeout = 0)
@@ -30,7 +31,7 @@ namespace DAO
         {
             using (var conn = new SqlConnection(cnStr))
             {
-                return conn.Query<T>(sql, Parameters).ToList();
+                return conn.Query<T>(sql, Parameters,null, true, _CommandTimeout).ToList();
             }
         }
         /// <summary>
@@ -44,7 +45,7 @@ namespace DAO
         {
             using (var conn = new SqlConnection(cnStr))
             {
-                return conn.QueryFirst<T>(sql, Parameters);
+                return conn.Query<T>(sql, Parameters, null, true, _CommandTimeout).FirstOrDefault();
             }
         }
         /// <summary>
@@ -57,7 +58,7 @@ namespace DAO
         {
             using (var conn = new SqlConnection(cnStr))
             {
-               return(conn.Query(sql, Parameters) as IEnumerable<Dictionary<string, object>>).ToList();
+               return(conn.Query(sql, Parameters,null,true, _CommandTimeout) as IEnumerable<Dictionary<string, object>>).ToList();
             }
         }
         /// <summary>
@@ -71,7 +72,7 @@ namespace DAO
         {
             using (var conn = new SqlConnection(cnStr))
             {
-                return conn.ExecuteScalar<T>(sql, Parameters);
+                return conn.ExecuteScalar<T>(sql, Parameters,null, _CommandTimeout);
             }
         }
         /// <summary>
@@ -84,10 +85,10 @@ namespace DAO
         {
             using (var conn = new SqlConnection(cnStr))
             {
-                return conn.Execute(sql, Parameters);
+                return conn.Execute(sql, Parameters,null, _CommandTimeout);
             }
-
         }
+        #region Dispose
         /// <summary>
         /// 
         /// </summary>
@@ -116,5 +117,6 @@ namespace DAO
                 disposed = true;
             }
         }
+#endregion
     }
 }
