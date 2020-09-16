@@ -18,44 +18,22 @@ namespace Service
         /// suppliers選單
         /// </summary>
         public List<Suppliers> Sup { get; set; }
-        public ProductService() : base()
+        public ProductService(IDAC DataControl) : base(DataControl)
         {
 
         }
-        public ProductService(Employees User) : base(User)
-        { 
-        
-        }
         /// <summary>
-        /// 取得catagories下拉資料
+        /// 取得下拉資料
         /// </summary>
         /// <returns></returns>
-        public List<Catagories> GetCatagories()
+        public List<T> GetDropdown<T>(IDAC DataControl)
         {
-            using (var dao = new CatagoriesDAO())
-            {
-                return dao.GetCatagoryList();
-            }
+            _Dac = DataControl;
+            return _Dac.GetList<T>();
         }
-        /// <summary>
-        /// 取得Suppliers下拉資料
-        /// </summary>
-        /// <returns></returns>
-        public List<Suppliers> GetSupplierList()
+        public T QueryId<T>(int ProductId)
         {
-            using (var dao = new SuppliersDAO())
-            {
-                return dao.GetSuppliers();
-            }
-        }
-        /// <summary>
-        /// 讀取查詢畫面資料
-        /// </summary>
-        /// <returns></returns>
-        public void LoadQueryData()
-        {
-            Cat = GetCatagories();
-            Sup = GetSupplierList();
+            return _Dac.GetFirst<T>(ProductId);
         }
         /// <summary>
         /// 查詢
@@ -63,10 +41,7 @@ namespace Service
         /// <returns></returns>
         public List<Products> Query()
         {
-            using (var dao = new ProductsDAO())
-            {
-                return dao.GetProductList(Product);
-            }
+            return _Dac.GetList(Product);
         }
         /// <summary>
         /// 刪除
@@ -74,9 +49,20 @@ namespace Service
         /// <param name="ProductId"></param>
         public void Delete(int[] ProductId)
         {
-            using (var dao = new ProductsDAO())
+           _Dac.Delete(ProductId);
+        }
+        /// <summary>
+        /// 新增/修改
+        /// </summary>
+        public void Modify(Products P)
+        {
+            if (P.ProductID == 0)
             {
-                dao.Delete(ProductId);
+                _Dac.Insert(P);
+            }
+            else
+            {
+                _Dac.Update(P);
             }
         }
    }

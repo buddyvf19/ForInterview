@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataModels;
+﻿using System.Collections.Generic;
 namespace DAO
 {
     public class SuppliersDAO : _DAO
@@ -18,11 +13,11 @@ namespace DAO
         /// <param name="EmpId">員工帳號</param>
         /// <param name="Password">密碼</param>
         /// <returns></returns>
-        public List<Suppliers> GetSuppliers()
+        public override  List<T> GetList<T>() 
         {
             sql = @"select SupplierID,CompanyName,ContactName,ContactTitle,Address,City,Region from Suppliers
                      ";
-           return QueryLists<Suppliers>(sql);
+           return QueryLists<T>(sql);
         }
     }
 }

@@ -18,10 +18,10 @@ namespace DAO
         /// <param name="EmpId">員工帳號</param>
         /// <param name="Password">密碼</param>
         /// <returns></returns>
-        public List<Catagories> GetCatagoryList()
+        public override  List<T> GetList<T>()
         {
             sql = @"select   CategoryID,CategoryName,Description from Categories ";
-            return QueryLists<Catagories>(sql);
+            return QueryLists<T>(sql);
         }
     }
 }

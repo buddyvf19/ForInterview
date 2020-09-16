@@ -6,12 +6,22 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DataModels;
 using Service;
+using DAO;
 namespace ForInterView.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : _Controller
     {
+        /// <summary>
+        /// login page
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect(FormsAuthentication.DefaultUrl);
+            }
+            Logout();
             return View();
         }
         public ActionResult Index()
@@ -24,16 +34,18 @@ namespace ForInterView.Controllers
         /// <param name="Emp">登入資料</param>
         /// <returns></returns>
         [HttpPost]
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Login(Employees Emp)
         {
-            if (User.Identity.IsAuthenticated)
+            LoginService service = new LoginService(Emp,new EmployeesDAO());
+            //check login data
+            if (service.Login())
             {
-                return Redirect(FormsAuthentication.DefaultUrl);
-            }
-            LoginService s = new LoginService(Emp);
-            if (s.Login())
-            {
-                Session["User"] = s.EmpData;
+                ///set session
+                Session["User"] = service.EmpData;
+                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, service.EmpData.Account, DateTime.Now, DateTime.Now.AddMinutes(20), true, "", FormsAuthentication.FormsCookiePath);
+                string encTicket = FormsAuthentication.Encrypt(ticket);
+                Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
                 return Json(new { success = true });
             }
             else

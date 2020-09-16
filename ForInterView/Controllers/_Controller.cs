@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Reflection;
 using DataModels;
 namespace ForInterView.Controllers
@@ -25,15 +27,17 @@ namespace ForInterView.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (Session["User"] == null &&
-                !filterContext.RequestContext.HttpContext.Request.RawUrl.ToLower().Contains("login") )
+                !filterContext.RequestContext.HttpContext.Request.RawUrl.ToLower().Contains("login")&&
+                !filterContext.RequestContext.HttpContext.Request.RawUrl.ToLower().Contains("logout")
+            )
             {
-                RedirectToAction("Home", "login");
+                FormsAuthentication.SignOut();
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Logout", controller = "Home" }));
             }
             else
             {
                 UserData = (Employees)Session["User"];
             }
-            base.OnActionExecuting(filterContext);
         }
         /// <summary>
         /// dorpdown databind

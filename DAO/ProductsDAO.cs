@@ -18,8 +18,9 @@ namespace DAO
         /// </summary>
         /// <param name="Products">查詢物件</param>
         /// <returns></returns>
-        public List<Products> GetProductList(Products Products)
+        public override List<T> GetList<T>(T Products) 
         {
+           var Prodt =  Products as Products;
             sql = @"select 
                     ProductID,ProductName,a.SupplierID,CompanyName SupplierName
                     ,a.CategoryID,CategoryName
@@ -29,26 +30,26 @@ namespace DAO
                     left join  Suppliers c on a.SupplierID=c.SupplierID
                     where 1=1
                     ";
-            if (!string.IsNullOrEmpty(Products.ProductName))
+            if (!string.IsNullOrEmpty(Prodt.ProductName))
             {
                 sql += " and ProductName like '%'+@ProductName+'%' ";
             }
-            if (Products.CategoryID>0)
+            if (Prodt.CategoryID>0)
             {
                 sql += " and a.CategoryID =@CategoryID ";
             }
-            if (Products.SupplierID>0)
+            if (Prodt.SupplierID>0)
             {
                 sql += " and a.SupplierID =@SupplierID ";
             }
-            return QueryLists<Products>(sql, Products);
+            return QueryLists<T>(sql, Products);
         }
         /// <summary>
         /// 以ID取得product資料
         /// </summary>
         /// <param name="ProductId"></param>
         /// <returns></returns>
-        public Products GetProduct(int ProductId)
+        public override T GetFirst<T>(int ProductId)
         {
             sql = @"select 
                     ProductID,ProductName,a.SupplierID,a.CategoryID,QuantityPerUnit,UnitPrice
@@ -57,17 +58,17 @@ namespace DAO
                     left join  Suppliers c on a.SupplierID=c.SupplierID
                     where ProductID=@ProductID
                     ";
-            return QueryFirst<Products>(sql, new { ProductId });
+            return QueryFirst<T>(sql, new { ProductId });
         }
         /// <summary>
         /// 新增product
         /// </summary>
         /// <param name="P"></param>
-        public void Insert(Products P)
+        public override void Insert<T>(T P)  
         {
-            sql = @"Insert Products(ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice
+            sql = @"Insert Products(ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice
                     ,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued)
-                values(@ProductID,@ProductName,@SupplierID,@CategoryID,@QuantityPerUnit,@UnitPrice
+                values(@ProductName,@SupplierID,@CategoryID,@QuantityPerUnit,@UnitPrice
                     ,@UnitsInStock,@UnitsOnOrder,@ReorderLevel,@Discontinued)
             ";
             ExcuteNoQuery(sql, P);
@@ -76,7 +77,7 @@ namespace DAO
         /// 新增product
         /// </summary>
         /// <param name="P"></param>
-        public void Update(Products P)
+        public override void Update<T>(T P) 
         {
             sql = @"update Products
                     set ProductName=@ProductName,
@@ -96,7 +97,7 @@ namespace DAO
         /// 刪除
         /// </summary>
         /// <param name="Product"></param>
-        public void Delete(int[] Product)
+        public override void Delete(int[] Product)
         {
             using (TransactionScope scpoe = new TransactionScope())
             {

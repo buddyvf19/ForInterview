@@ -33,13 +33,14 @@
                 <input type="button" value="query" onclick="Query();">
             </td>
             <td>
-                <input type="button" value="delete" onclick="Delete();">
+                <input type="button" value="New" onclick="OpenModify(0);">
             </td>
         </tr>
     </table>
 </form>
 <br>
 <div id="Grid">
+    <input type="button" value="delete" onclick="Delete();">
 </div>
 @section scripts{
     <script>
@@ -94,7 +95,7 @@
             }
         }
         function OpenModify(ProdtId) {
-
+            window.open("@Url.Action("Modify", "Product")?ProductId=" + ProdtId);
         }
     </script>
 }

@@ -7,12 +7,12 @@ using DAO;
 using DataModels;
 namespace Service
 {
-    public class LoginService:_Service
+    public class LoginService : _Service
     {
-        public LoginService():base()
-        { 
+        public LoginService() : base()
+        {
         }
-        public LoginService(Employees User) : base(User)
+        public LoginService(Employees User, IDAC DataObject) : base(User,DataObject)
         {
             EmpData = loginUser;
         }
@@ -25,14 +25,11 @@ namespace Service
         /// <returns></returns>
         public bool Login()
         {
-            using (EmployeesDAO Dao = new EmployeesDAO())
-            {
-                loginUser = Dao.GetLoginEmp(loginUser);
-                if (loginUser != null)
-                    return true;
-                else
-                    return false;
-            }
+            loginUser = _Dac.GetFirst(loginUser);
+            if (loginUser != null)
+                return true;
+            else
+                return false;
         }
     }
 }

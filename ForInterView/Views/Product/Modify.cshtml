@@ -1,0 +1,71 @@
+﻿@model ForInterView.Models.ProductModel
+@{
+    Layout = "~/Views/Shared/_LayoutBlank.cshtml";
+}
+@using (Ajax.BeginForm("Modify", "Product", new AjaxOptions
+{
+    OnSuccess = "Success",
+    OnFailure = "Fail",
+}, new { id = "frmModify" }))
+{
+    @Html.AntiForgeryToken()
+    <h2>@ViewBag.Title</h2>
+    @Html.HiddenFor(x => x.ProductID);
+    <br />
+    @:ProductName:
+    <br />
+    @Html.TextBoxFor(x => x.ProductName);
+    <br />
+    @:Supplier:
+    <br />
+    @Html.DropDownListFor(x => x.SupplierID, Model.Sup);
+    <br />
+    @:Catagory:
+    <br />
+    @Html.DropDownListFor(x => x.CategoryID, Model.Cat);
+    <br />
+    @:QuantityPerUnit:
+    <br />
+    @Html.TextBoxFor(x => x.QuantityPerUnit);
+    <br />
+    @:UnitPrice:
+    <br>
+    @Html.TextBoxFor(x => x.UnitPrice, new { @class = "num" });
+    <br />
+    @:UnitsInStock:
+    <br />
+    @Html.TextBoxFor(x => x.UnitsInStock, new { @class = "num" });
+    <br />
+    @:UnitsOnOrder:
+    <br />
+    @Html.TextBoxFor(x => x.UnitsOnOrder, new { @class = "num" });
+    <br />
+    @:ReorderLevel:
+    <br>
+    @Html.TextBoxFor(x => x.ReorderLevel, new { @class = "num" });
+    <br />
+    @:Discontinued:
+    <br>
+    @Html.CheckBoxFor(x => x.Discontinued);
+    <br />
+    <input type="button" value="save" onclick="$('#frmModify').submit();">
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.num').bind('keyup paste', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+        function Success(e) {
+            if (e.success) {
+                alert('存檔成功!!');
+                opener.Query();
+                window.close();
+            }
+            else {
+                alert('存檔失敗!!');
+            }
+        }
+    </script>
+}
